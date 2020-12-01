@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
+
+        <TextView
+            android:id="@+id/textCals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorDark"
+            android:textSize="70sp"
+            android:text="0"/>
+
+        <View
+            android:id="@+id/viewSplit"
+            android:layout_width="wrap_content"
+            android:layout_height="8dp"
+            android:layout_below="@+id/textCals"
+            android:layout_marginHorizontal="70sp"
+            android:background="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/textCalsGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/viewSplit"
+            android:textColor="@android:color/black"
+            android:textSize="70sp"
+            android:text="0" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnEndDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBtnBlue"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20sp"
+        android:textColor="@color/colorWhite"
+        android:text="@string/end_day" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnAddCals"
+        android:layout_alignStart="@+id/btnAdd"
+        android:layout_alignEnd="@+id/btnAdd"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorBtnBlueLight"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_food" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddCals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnAdd"
+        android:layout_alignStart="@+id/btnAdd"
+        android:layout_alignEnd="@+id/btnAdd"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorBtnBlueLight"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_pen" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/colorBtnBlue"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_add" />
+
+
+</RelativeLayout>
