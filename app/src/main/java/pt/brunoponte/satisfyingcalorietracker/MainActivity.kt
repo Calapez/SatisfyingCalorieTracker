@@ -13,10 +13,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import kotlinx.android.synthetic.main.activity_main.*
 import pt.brunoponte.satisfyingcalorietracker.util.AuxMethods
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
+    private val TAG = "MainActivity"
+
     private var dialogSetCalsGoal: AlertDialog? = null
     private var dialogAddCals: AlertDialog? = null
 
@@ -26,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewSplit: View
 
     // Audio vars
-    private val succesCalories: MediaPlayer by lazy { MediaPlayer.create(mActivity, R.raw.success) }
-    private val failCalories: MediaPlayer by lazy { MediaPlayer.create(mActivity, R.raw.fail) }
+    private val successAudio: MediaPlayer by lazy { MediaPlayer.create(mActivity, R.raw.success) }
+    private val failAudio: MediaPlayer by lazy { MediaPlayer.create(mActivity, R.raw.fail) }
 
     // Animation vars
     private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
@@ -42,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
         mActivity = this
 
         // Init UI elements
@@ -71,7 +77,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onAddFoodButtonClicked() {
-        Toast.makeText(this, "Add food", Toast.LENGTH_SHORT).show()
+        val bundle = bundleOf("some_int" to 10)  // Bundle to send to fragment
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val fragment = FoodsFragment.newInstance()
+        fragmentTransaction.replace(R.id.fragment_container_view, fragment)
+        fragmentTransaction.commit()
+
+        // Add fragment to Activity's fragment container view
+        //supportFragmentManager.commit {
+        //    setReorderingAllowed(true)
+        //    replace(R.id.fragment_container_view, FoodsFragment())
+        //}
     }
 
     private fun setVisibility(clicked: Boolean) {
@@ -195,12 +212,12 @@ class MainActivity : AppCompatActivity() {
                     textCals.setTextColor(getColor(R.color.colorGreen))
                     textCalsGoal.setTextColor(getColor(R.color.colorGreen))
                     viewSplit.setBackgroundColor(getColor(R.color.colorGreen))
-                    succesCalories.start()
+                    successAudio.start()
                 } else {
                     textCals.setTextColor(getColor(android.R.color.holo_red_dark))
                     textCalsGoal.setTextColor(getColor(android.R.color.holo_red_dark))
                     viewSplit.setBackgroundColor(getColor(android.R.color.holo_red_dark))
-                    failCalories.start()
+                    failAudio.start()
                 }
 
                 //buttonEndDay!!.visibility = View.GONE
