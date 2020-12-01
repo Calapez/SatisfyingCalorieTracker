@@ -13,18 +13,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import pt.brunoponte.satisfyingcalorietracker.util.AuxMethods
 
 class MainActivity : AppCompatActivity() {
     private var dialogSetCaloriesGoal: AlertDialog? = null
 
-    // TODO late init vals?
-    private var buttonEndDay: Button? = null
-    private var editCurrentCalories: EditText? = null
-    private var textCaloriesGoal: TextView? = null
-    private var viewSplit: View? = null
+    private lateinit var btnEndDay: Button
+    private lateinit var editCurrCals: EditText
+    private lateinit var textGoalCals: TextView
+    private lateinit var viewSplit: View
 
     // Audio vars
     private val succesCalories: MediaPlayer by lazy { MediaPlayer.create(mActivity, R.raw.success) }
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private var clicked: Boolean = false
 
     // Reference to self
-    private var mActivity: MainActivity? = null
+    private lateinit var mActivity: MainActivity
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,23 +45,16 @@ class MainActivity : AppCompatActivity() {
         mActivity = this
 
         // Init UI elements
-        buttonEndDay = findViewById<View>(R.id.buttonEndDay) as Button
-        buttonEndDay!!.setOnClickListener { endDay() }
-        editCurrentCalories = findViewById<View>(R.id.editCurrentCalories) as EditText
-        textCaloriesGoal = findViewById<View>(R.id.textCalorieGoal) as TextView
+        btnEndDay = findViewById<View>(R.id.buttonEndDay) as Button
+        editCurrCals = findViewById<View>(R.id.editCurrentCalories) as EditText
+        textGoalCals = findViewById<View>(R.id.textCalorieGoal) as TextView
         viewSplit = findViewById<View>(R.id.viewSplit) as View
 
-        btnAdd.setOnClickListener {
-            onAddButtonClicked()
-        }
-
-        btnAddCals.setOnClickListener {
-            onAddCalsButtonClicked()
-        }
-
-        btnAddFood.setOnClickListener {
-            onAddFoodButtonClicked()
-        }
+        // Click listeners
+        btnEndDay.setOnClickListener { endDay() }
+        btnAdd.setOnClickListener { onAddButtonClicked() }
+        btnAddCals.setOnClickListener { onAddCalsButtonClicked() }
+        btnAddFood.setOnClickListener { onAddFoodButtonClicked() }
     }
 
     private fun onAddButtonClicked() {
@@ -143,7 +134,7 @@ class MainActivity : AppCompatActivity() {
             val editCaloriesGoal =
                 dialogView.findViewById<View>(R.id.editCaloriesGoal) as EditText
             try {
-                textCaloriesGoal!!.text = editCaloriesGoal.text.toString()
+                textGoalCals.text = editCaloriesGoal.text.toString()
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(mActivity, "Calories must be a number", Toast.LENGTH_SHORT)
@@ -161,8 +152,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun endDay() {
-        val currentCalsTxt = editCurrentCalories!!.text.toString()
-        val goalCalsTxt = textCaloriesGoal!!.text.toString()
+        val currentCalsTxt = editCurrCals.text.toString()
+        val goalCalsTxt = textGoalCals.text.toString()
 
         if (currentCalsTxt.isBlank()) {
             Toast.makeText(mActivity, "Insert your current calories",
@@ -182,17 +173,17 @@ class MainActivity : AppCompatActivity() {
                 val goalCals = goalCalsTxt.toInt()
 
                 if (currentCals <= goalCals) {
-                    editCurrentCalories!!.setTextColor(getColor(R.color.colorGreen))
-                    textCaloriesGoal!!.setTextColor(getColor(R.color.colorGreen))
-                    viewSplit!!.setBackgroundColor(getColor(R.color.colorGreen))
-                    succesCalories!!.start()
+                    editCurrCals.setTextColor(getColor(R.color.colorGreen))
+                    textGoalCals.setTextColor(getColor(R.color.colorGreen))
+                    viewSplit.setBackgroundColor(getColor(R.color.colorGreen))
+                    succesCalories.start()
                 } else {
-                    editCurrentCalories!!.setTextColor(getColor(android.R.color.holo_red_dark))
-                    textCaloriesGoal!!.setTextColor(getColor(android.R.color.holo_red_dark))
-                    viewSplit!!.setBackgroundColor(getColor(android.R.color.holo_red_dark))
-                    failCalories!!.start()
+                    editCurrCals.setTextColor(getColor(android.R.color.holo_red_dark))
+                    textGoalCals.setTextColor(getColor(android.R.color.holo_red_dark))
+                    viewSplit.setBackgroundColor(getColor(android.R.color.holo_red_dark))
+                    failCalories.start()
                 }
-                editCurrentCalories!!.clearFocus()
+                editCurrCals.clearFocus()
 
                 //buttonEndDay!!.visibility = View.GONE
             } catch (e: Exception) {
