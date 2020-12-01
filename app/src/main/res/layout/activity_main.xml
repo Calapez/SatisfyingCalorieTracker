@@ -48,12 +48,56 @@
         android:id="@+id/buttonEndDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_dark"
-        android:layout_alignParentRight="true"
+        android:background="@color/colorBtnBlue"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="20sp"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorWhite"
         android:text="@string/end_day" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnAddCals"
+        android:layout_alignStart="@+id/btnAdd"
+        android:layout_alignEnd="@+id/btnAdd"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorBtnBlueLight"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_food" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddCals"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnAdd"
+        android:layout_alignStart="@+id/btnAdd"
+        android:layout_alignEnd="@+id/btnAdd"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/colorBtnBlueLight"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/ic_pen" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/colorBtnBlue"
+        android:tint="@color/colorWhite"
+        android:clickable="true"
+        android:focusable="true"
+        app:srcCompat="@drawable/ic_add" />
 
 
 </RelativeLayout>
