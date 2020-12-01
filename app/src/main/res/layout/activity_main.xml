@@ -13,27 +13,25 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
 
-        <EditText
-            android:id="@+id/editCurrentCalories"
+        <TextView
+            android:id="@+id/textCals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorDark"
             android:textSize="70sp"
-            android:hint="0"
-            android:digits="0123456789"
-            android:inputType="number" />
+            android:text="0"/>
 
         <View
             android:id="@+id/viewSplit"
             android:layout_width="wrap_content"
             android:layout_height="8dp"
-            android:layout_below="@+id/editCurrentCalories"
+            android:layout_below="@+id/textCals"
             android:layout_marginHorizontal="70sp"
             android:background="@android:color/black"/>
 
         <TextView
-            android:id="@+id/textCalorieGoal"
+            android:id="@+id/textCalsGoal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

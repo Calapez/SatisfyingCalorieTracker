@@ -17,11 +17,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pt.brunoponte.satisfyingcalorietracker.util.AuxMethods
 
 class MainActivity : AppCompatActivity() {
-    private var dialogSetCaloriesGoal: AlertDialog? = null
+    private var dialogSetCalsGoal: AlertDialog? = null
+    private var dialogAddCals: AlertDialog? = null
 
     private lateinit var btnEndDay: Button
-    private lateinit var editCurrCals: EditText
-    private lateinit var textGoalCals: TextView
+    private lateinit var textCals: TextView
+    private lateinit var textCalsGoal: TextView
     private lateinit var viewSplit: View
 
     // Audio vars
@@ -46,14 +47,14 @@ class MainActivity : AppCompatActivity() {
 
         // Init UI elements
         btnEndDay = findViewById<View>(R.id.buttonEndDay) as Button
-        editCurrCals = findViewById<View>(R.id.editCurrentCalories) as EditText
-        textGoalCals = findViewById<View>(R.id.textCalorieGoal) as TextView
+        textCals = findViewById<View>(R.id.textCals) as TextView
+        textCalsGoal = findViewById<View>(R.id.textCalsGoal) as TextView
         viewSplit = findViewById<View>(R.id.viewSplit) as View
 
         // Click listeners
         btnEndDay.setOnClickListener { endDay() }
         btnAdd.setOnClickListener { onAddButtonClicked() }
-        btnAddCals.setOnClickListener { onAddCalsButtonClicked() }
+        btnAddCals.setOnClickListener { onAddCalsButtonClicked(); }
         btnAddFood.setOnClickListener { onAddFoodButtonClicked() }
     }
 
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onAddCalsButtonClicked() {
-        Toast.makeText(this, "Add calories", Toast.LENGTH_SHORT).show()
+        addCalsDialog()
     }
 
     private fun onAddFoodButtonClicked() {
@@ -114,46 +115,64 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.action_set_calories_goal) {
-            showSetCaloriesDialog()
+            setCalsGoalDialog()
             return true
         }
         return false
     }
 
-    private fun showSetCaloriesDialog() {
+    private fun addCalsDialog() {
         // Create a popup dialog to input name
         val builder = AlertDialog.Builder(this)
 
         // View to inflate
-        val dialogView = layoutInflater.inflate(R.layout.dialog_set_calories_goal, null)
+        val dialogView = View.inflate(this, R.layout.dialog_add_calories, null)
         builder.setView(dialogView)
 
-        // The arguments (editable values) from the view
-        val buttonApply = dialogView.findViewById<View>(R.id.buttonSave) as Button
-        buttonApply.setOnClickListener {
-            val editCaloriesGoal =
-                dialogView.findViewById<View>(R.id.editCaloriesGoal) as EditText
-            try {
-                textGoalCals.text = editCaloriesGoal.text.toString()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(mActivity, "Calories must be a number", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            dialogSetCaloriesGoal!!.dismiss()
+        val buttonSave = dialogView.findViewById<View>(R.id.buttonSave) as Button
+        buttonSave.setOnClickListener {
+            val editCals = dialogView.findViewById<View>(R.id.editCals) as EditText
+            textCals.text = (editCals.text.toString().toInt() + textCals.text.toString().toInt())
+                .toString()
+
+            dialogAddCals!!.dismiss()
         }
 
         // Crete & show the dialog
         builder.create()
-        dialogSetCaloriesGoal = builder.show()
-        dialogSetCaloriesGoal!!.setOnDismissListener{
-            dialogSetCaloriesGoal = null
+        dialogAddCals = builder.show()
+        dialogAddCals!!.setOnDismissListener{
+            dialogAddCals = null
+        }
+    }
+
+    private fun setCalsGoalDialog() {
+        // Create a popup dialog to input name
+        val builder = AlertDialog.Builder(this)
+
+        // View to inflate
+        val dialogView = View.inflate(this, R.layout.dialog_set_calories_goal, null)
+        builder.setView(dialogView)
+
+        val buttonSave = dialogView.findViewById<View>(R.id.buttonSave) as Button
+        buttonSave.setOnClickListener {
+            val editCals = dialogView.findViewById<View>(R.id.editCals) as EditText
+            textCalsGoal.text = editCals.text.toString()
+
+            dialogSetCalsGoal!!.dismiss()
+        }
+
+        // Crete & show the dialog
+        builder.create()
+        dialogSetCalsGoal = builder.show()
+        dialogSetCalsGoal!!.setOnDismissListener{
+            dialogSetCalsGoal = null
         }
     }
 
     private fun endDay() {
-        val currentCalsTxt = editCurrCals.text.toString()
-        val goalCalsTxt = textGoalCals.text.toString()
+        val currentCalsTxt = textCals.text.toString()
+        val goalCalsTxt = textCalsGoal.text.toString()
 
         if (currentCalsTxt.isBlank()) {
             Toast.makeText(mActivity, "Insert your current calories",
@@ -173,17 +192,16 @@ class MainActivity : AppCompatActivity() {
                 val goalCals = goalCalsTxt.toInt()
 
                 if (currentCals <= goalCals) {
-                    editCurrCals.setTextColor(getColor(R.color.colorGreen))
-                    textGoalCals.setTextColor(getColor(R.color.colorGreen))
+                    textCals.setTextColor(getColor(R.color.colorGreen))
+                    textCalsGoal.setTextColor(getColor(R.color.colorGreen))
                     viewSplit.setBackgroundColor(getColor(R.color.colorGreen))
                     succesCalories.start()
                 } else {
-                    editCurrCals.setTextColor(getColor(android.R.color.holo_red_dark))
-                    textGoalCals.setTextColor(getColor(android.R.color.holo_red_dark))
+                    textCals.setTextColor(getColor(android.R.color.holo_red_dark))
+                    textCalsGoal.setTextColor(getColor(android.R.color.holo_red_dark))
                     viewSplit.setBackgroundColor(getColor(android.R.color.holo_red_dark))
                     failCalories.start()
                 }
-                editCurrCals.clearFocus()
 
                 //buttonEndDay!!.visibility = View.GONE
             } catch (e: Exception) {

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Satisfying Calorie Tracker</string>
-    <string name="title_set_calories_goal">Set calories goal</string>
+    <string name="title_set_calories_goal">Set Calories Goal</string>
+    <string name="title_add_calories">Add Calories</string>
     <string name="save">Save</string>
     <string name="end_day">End Day</string>
 </resources>

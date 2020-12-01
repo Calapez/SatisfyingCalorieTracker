@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Contador de Calorias Satisfatório</string>
-    <string name="title_set_calories_goal">Definir objetivo de calorias</string>
+    <string name="title_set_calories_goal">Definir Objetivo de Calorias</string>
+    <string name="title_add_calories">Adicionar Calorias</string>
     <string name="save">Guardar</string>
     <string name="end_day">Terminar Dia</string>
 </resources>
