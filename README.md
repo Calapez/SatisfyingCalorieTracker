@@ -1,1 +1,1 @@
-SatisfyingCaloryTracker
+SatisfyingCaloriesTracker
