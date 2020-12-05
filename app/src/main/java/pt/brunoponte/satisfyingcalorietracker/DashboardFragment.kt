@@ -58,6 +58,9 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        textCals.text = mActivity.appData.currentCals.toString()
+        textCalsGoal.text = mActivity.appData.targetCals.toString()
+
         // Set onClick listeners
         btnEndDay.setOnClickListener { endDay() }
         btnAdd.setOnClickListener { onAddButtonClicked() }
@@ -138,8 +141,11 @@ class DashboardFragment : Fragment() {
         val buttonSave = dialogView.findViewById<View>(R.id.buttonSave) as Button
         buttonSave.setOnClickListener {
             val editCals = dialogView.findViewById<View>(R.id.editCals) as EditText
-            textCals.text = (editCals.text.toString().toInt() + textCals.text.toString().toInt())
-                .toString()
+
+            // Set new current calories
+            val newCals = editCals.text.toString().toInt() + mActivity.appData.currentCals
+            mActivity.appData.currentCals = newCals
+            textCals.text = newCals.toString()
 
             dialogAddCals!!.dismiss()
         }
@@ -163,7 +169,11 @@ class DashboardFragment : Fragment() {
         val buttonSave = dialogView.findViewById<View>(R.id.buttonSave) as Button
         buttonSave.setOnClickListener {
             val editCals = dialogView.findViewById<View>(R.id.editCals) as EditText
-            textCalsGoal.text = editCals.text.toString()
+
+            // Set new goal calories
+            val newGoalCals = editCals.text.toString().toInt()
+            mActivity.appData.targetCals = newGoalCals
+            textCalsGoal.text = newGoalCals.toString()
 
             dialogSetCalsGoal!!.dismiss()
         }
@@ -177,43 +187,16 @@ class DashboardFragment : Fragment() {
     }
 
     private fun endDay() {
-        val currentCalsTxt = textCals.text.toString()
-        val goalCalsTxt = textCalsGoal.text.toString()
-
-        if (currentCalsTxt.isBlank()) {
-            Toast.makeText(mActivity, "Insert your current calories",
-                Toast.LENGTH_SHORT).show()
-        } else if (!AuxMethods.isInt(currentCalsTxt)) {
-            Toast.makeText(mActivity, "Your current calories must be a number",
-                Toast.LENGTH_SHORT).show()
-        } else if (goalCalsTxt.isBlank()) {
-            Toast.makeText(mActivity, "Insert your goal calories",
-                Toast.LENGTH_SHORT).show()
-        } else if (!AuxMethods.isInt(goalCalsTxt)) {
-            Toast.makeText(mActivity, "Your goal calories must be a number" ,
-                Toast.LENGTH_SHORT).show()
+        if (mActivity.appData.currentCals <= mActivity.appData.targetCals) {
+            textCals.setTextColor(mActivity.getColor(R.color.colorGreen))
+            textCalsGoal.setTextColor(mActivity.getColor(R.color.colorGreen))
+            viewSplit.setBackgroundColor(mActivity.getColor(R.color.colorGreen))
+            successAudio.start()
         } else {
-            try {
-                val currentCals = currentCalsTxt.toInt()
-                val goalCals = goalCalsTxt.toInt()
-
-                if (currentCals <= goalCals) {
-                    textCals.setTextColor(mActivity.getColor(R.color.colorGreen))
-                    textCalsGoal.setTextColor(mActivity.getColor(R.color.colorGreen))
-                    viewSplit.setBackgroundColor(mActivity.getColor(R.color.colorGreen))
-                    successAudio.start()
-                } else {
-                    textCals.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
-                    textCalsGoal.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
-                    viewSplit.setBackgroundColor(mActivity.getColor(android.R.color.holo_red_dark))
-                    failAudio.start()
-                }
-
-                //buttonEndDay!!.visibility = View.GONE
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(mActivity, "Unexpected Error", Toast.LENGTH_SHORT).show()
-            }
+            textCals.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
+            textCalsGoal.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
+            viewSplit.setBackgroundColor(mActivity.getColor(android.R.color.holo_red_dark))
+            failAudio.start()
         }
     }
 
