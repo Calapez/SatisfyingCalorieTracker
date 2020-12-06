@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import pt.brunoponte.satisfyingcalorietracker.util.AuxMethods
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), MediaPlayer.OnCompletionListener {
 
     private val TAG = "DashboardFragment"
 
@@ -58,14 +58,13 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        textCals.text = mActivity.appData.currentCals.toString()
-        textCalsGoal.text = mActivity.appData.targetCals.toString()
-
         // Set onClick listeners
         btnEndDay.setOnClickListener { endDay() }
         btnAdd.setOnClickListener { onAddButtonClicked() }
         btnAddCals.setOnClickListener { onAddCalsButtonClicked(); }
         btnAddFood.setOnClickListener { onAddFoodButtonClicked() }
+
+        updateUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,6 +79,11 @@ class DashboardFragment : Fragment() {
             return true
         }
         return false
+    }
+
+    private fun updateUi() {
+        textCals.text = mActivity.appData.currentCals.toString()
+        textCalsGoal.text = mActivity.appData.targetCals.toString()
     }
 
     private fun onAddButtonClicked() {
@@ -192,12 +196,25 @@ class DashboardFragment : Fragment() {
             textCalsGoal.setTextColor(mActivity.getColor(R.color.colorGreen))
             viewSplit.setBackgroundColor(mActivity.getColor(R.color.colorGreen))
             successAudio.start()
+            successAudio.setOnCompletionListener(this)
         } else {
             textCals.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
             textCalsGoal.setTextColor(mActivity.getColor(android.R.color.holo_red_dark))
             viewSplit.setBackgroundColor(mActivity.getColor(android.R.color.holo_red_dark))
             failAudio.start()
+            failAudio.setOnCompletionListener(this)
         }
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        mActivity.appData.currentCals = 0
+        mActivity.appData.targetCals = 0
+
+        textCals.setTextColor(mActivity.getColor(android.R.color.black))
+        textCalsGoal.setTextColor(mActivity.getColor(android.R.color.black))
+        viewSplit.setBackgroundColor(mActivity.getColor(android.R.color.black))
+
+        updateUi()
     }
 
 }
