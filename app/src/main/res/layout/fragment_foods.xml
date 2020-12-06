@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <TextView
-        android:layout_width="match_parent"
+    <SearchView
+        android:id="@+id/searchFoods"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="TESTING" />
+        android:iconifiedByDefault="false">
+
+        <requestFocus />
+    </SearchView>
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:id="@+id/listFoods"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/searchFoods" />
 
 </RelativeLayout>
