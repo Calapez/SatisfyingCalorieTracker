@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -19,7 +20,8 @@ import java.text.ParseException
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
-class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextListener {
+class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextListener,
+    AdapterView.OnItemClickListener {
 
     private val TAG = "FoodsFragment"
 
@@ -90,6 +92,15 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
 
     override fun onQueryTextChange(query: String): Boolean {
         return false
+    }
+
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if (parent != null) {
+            val selectedFood = parent.adapter.getItem(position) as Food
+            mActivity.appData.currentCals += selectedFood.calories
+        }
+
+        mActivity.openDashboardFragment()
     }
 
     private fun getRandomFoods() : List<Food> {

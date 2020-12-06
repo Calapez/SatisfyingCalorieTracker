@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import pt.brunoponte.satisfyingcalorietracker.data.Food
@@ -54,5 +55,7 @@ class FoodsListViewAdapter(ctx: Context, foods: List<Food>) : BaseAdapter() {
         foodsList.addAll(foods)
         notifyDataSetChanged()
     }
+
+    fun getFood(position: Int) = foodsList[position]
 
 }
