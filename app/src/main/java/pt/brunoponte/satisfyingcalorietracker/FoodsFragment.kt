@@ -1,5 +1,6 @@
 package pt.brunoponte.satisfyingcalorietracker
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,15 @@ import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
+import org.json.JSONException
+import org.json.JSONObject
+import pt.brunoponte.satisfyingcalorietracker.data.Api
 import pt.brunoponte.satisfyingcalorietracker.data.Food
+import java.io.IOException
+import java.text.ParseException
+import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextListener {
@@ -29,6 +38,9 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         super.onCreate(savedInstanceState)
 
         mActivity = context as MainActivity
+        foods = mutableListOf()
+
+        /* For testing only
         foods = mutableListOf(
             Food("Carbonara", 500),
             Food("Amatriciana", 550),
@@ -48,7 +60,8 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
             Food("Pesto12", 800),
             Food("Pesto13", 800),
             Food("Pesto14", 800)
-        )
+        )*/
+
     }
 
     override fun onCreateView(
@@ -59,6 +72,7 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         val viewRoot = inflater.inflate(R.layout.fragment_foods, container, false)
 
         listViewFoods = viewRoot.findViewById(R.id.listFoods)
+        listViewFoods.onItemClickListener = this
         adapterFoods = FoodsListViewAdapter(mActivity, foods)
         listViewFoods.adapter = adapterFoods
 
@@ -69,11 +83,12 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
+        TaskGetFoods(query, "<APP_CODE>", "<APP_ID>")
+            .execute()
         return false
     }
 
-    override fun onQueryTextChange(newText: String): Boolean {
-        adapterFoods.setFoods(getRandomFoods())
+    override fun onQueryTextChange(query: String): Boolean {
         return false
     }
 
@@ -89,5 +104,81 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         return randomFoods
     }
 
+    private inner class TaskGetFoods(
+        private val query: String,
+        private val appId: String,
+        private val appKey: String
+    ) : AsyncTask<Void?, Void?, Void?>()
+    {
+        private var resultCode: Int = -1
+        private var resultBody: String = ""
 
+        override fun doInBackground(vararg params: Void?): Void? {
+            val httpClient = OkHttpClient()
+            httpClient.setConnectTimeout(3000, TimeUnit.MILLISECONDS)
+            httpClient.setReadTimeout(3000, TimeUnit.MILLISECONDS)
+            httpClient.setWriteTimeout(3000, TimeUnit.MILLISECONDS)
+
+            val getRequest: Request = Request.Builder()
+                .url(Api.constructUrl(query, appId, appKey))
+                .addHeader("Content-type", "application/json")
+                .build()
+
+            try {
+                val response = httpClient.newCall(getRequest).execute()
+                resultCode = response.code()
+                resultBody = response.body().string()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            return null
+        }
+
+        override fun onPostExecute(aVoid: Void?) {
+            super.onPostExecute(aVoid)
+
+            when (resultCode) {
+                200 -> { // Request succeeded
+
+                    foods.clear()
+
+                    try {
+                        val root = JSONObject(resultBody)
+                        val jsonHints = root.getJSONArray("hints")
+
+                        for (i in 0 until jsonHints.length()) {
+                            val jsonHint = jsonHints.getJSONObject(i)
+                            val jsonFood = jsonHint.getJSONObject("food")
+
+                            val name = jsonFood.getString("label")
+                            val jsonNutrients = jsonFood.getJSONObject("nutrients")
+                            val calories =
+                                if (jsonNutrients.has("ENERC_KCAL")) {
+                                    jsonNutrients.getDouble("ENERC_KCAL").toInt()
+                                } else { 0 }
+
+                            // Add Theme to list
+                            foods.add(Food(name, calories))
+                        }
+
+                        adapterFoods.setFoods(foods)
+                    } catch (e: JSONException) {
+                        // Failed to parse data, set Enterprise data as empty
+                        e.printStackTrace()
+                    } catch (e: ParseException) {
+                        e.printStackTrace()
+                    }
+                }
+                400 -> {
+                    foods.clear()
+                    adapterFoods.setFoods(foods)
+                }
+                401 -> { }
+                500 -> { }
+                else -> { }
+            }
+        }
+
+    }
 }
