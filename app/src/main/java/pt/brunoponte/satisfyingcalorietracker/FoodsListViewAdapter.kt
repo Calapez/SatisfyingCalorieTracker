@@ -17,7 +17,8 @@ class FoodsListViewAdapter(ctx: Context, foods: List<Food>) : BaseAdapter() {
     private val foodsList: MutableList<Food> = foods.toMutableList()
 
     class ViewHolder {
-        var name: TextView? = null
+        lateinit var name: TextView
+        lateinit var calories: TextView
     }
 
     override fun getCount() = foodsList.size
@@ -35,6 +36,7 @@ class FoodsListViewAdapter(ctx: Context, foods: List<Food>) : BaseAdapter() {
             viewToReturn = inflater.inflate(R.layout.listview_food_item, null)
             // Locate the TextViews in listview_item.xml
             holder.name = viewToReturn.findViewById(R.id.name)
+            holder.calories = viewToReturn.findViewById(R.id.calories)
             viewToReturn.tag = holder
         } else {
             viewToReturn = convertView
@@ -42,7 +44,8 @@ class FoodsListViewAdapter(ctx: Context, foods: List<Food>) : BaseAdapter() {
         }
         // Set the results into TextViews
         // Set the results into TextViews
-        holder.name?.text = foodsList[position].name
+        holder.name.text = foodsList[position].name
+        holder.calories.text = foodsList[position].calories.toString() + " kcal"
         return viewToReturn
     }
 

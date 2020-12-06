@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10dp">
-
-    <TextView
-        android:id="@+id/nameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Food : " />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="10dp" >
 
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/nameLabel" />
+        android:layout_weight="1"
+        android:paddingHorizontal="5dp"
+        tools:text="Spaghetti Carbonara" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/calories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:paddingHorizontal="5dp"
+        tools:text="460 kcal" />
+
+</LinearLayout>
