@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ListView
 import android.widget.SearchView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
@@ -15,6 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import pt.brunoponte.satisfyingcalorietracker.data.Api
 import pt.brunoponte.satisfyingcalorietracker.data.Food
+import pt.brunoponte.satisfyingcalorietracker.databinding.FragmentFoodsBinding
 import java.io.IOException
 import java.text.ParseException
 import java.util.concurrent.TimeUnit
@@ -25,12 +26,14 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
 
     private val TAG = "FoodsFragment"
 
-    // Declare Variables
-    private lateinit var mActivity : MainActivity
-    private lateinit var listViewFoods: ListView
-    private lateinit var searchFoods: SearchView
-    private lateinit var adapterFoods: FoodsListViewAdapter
+    private lateinit var mActivity: MainActivity
+
+    // Binding
+    private lateinit var binding: FragmentFoodsBinding
+
+    // Data vars
     private lateinit var foods: MutableList<Food>
+    private lateinit var adapterFoods: FoodsListViewAdapter
 
     companion object {
         fun newInstance() = FoodsFragment()
@@ -41,6 +44,7 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
 
         mActivity = context as MainActivity
         foods = mutableListOf()
+        adapterFoods = FoodsListViewAdapter(mActivity, foods)
 
         /* For testing only
         foods = mutableListOf(
@@ -71,22 +75,17 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewRoot = inflater.inflate(R.layout.fragment_foods, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_foods, container, false)
 
-        listViewFoods = viewRoot.findViewById(R.id.listFoods)
-        listViewFoods.onItemClickListener = this
-        adapterFoods = FoodsListViewAdapter(mActivity, foods)
-        listViewFoods.adapter = adapterFoods
-
-        searchFoods = viewRoot.findViewById(R.id.searchFoods)
-        searchFoods.setOnQueryTextListener(this);
-
-        return viewRoot
+        return binding.apply {
+            listFoods.onItemClickListener = this@FoodsFragment
+            listFoods.adapter = adapterFoods
+            searchFoods.setOnQueryTextListener(this@FoodsFragment);
+        }.root
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        TaskGetFoods(query, "<APP_CODE>", "<APP_ID>")
-            .execute()
+        TaskGetFoods(query, "<APP_CODE>", "<APP_ID>").execute()
         return false
     }
 
@@ -103,7 +102,7 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         mActivity.openDashboardFragment()
     }
 
-    private fun getRandomFoods() : List<Food> {
+    private fun getRandomFoods(): List<Food> {
         val randomFoods = mutableListOf<Food>()
 
         foods.forEach {
@@ -119,8 +118,7 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
         private val query: String,
         private val appId: String,
         private val appKey: String
-    ) : AsyncTask<Void?, Void?, Void?>()
-    {
+    ) : AsyncTask<Void?, Void?, Void?>() {
         private var resultCode: Int = -1
         private var resultBody: String = ""
 
@@ -167,7 +165,9 @@ class FoodsFragment : Fragment(R.layout.fragment_foods), SearchView.OnQueryTextL
                             val calories =
                                 if (jsonNutrients.has("ENERC_KCAL")) {
                                     jsonNutrients.getDouble("ENERC_KCAL").toInt()
-                                } else { 0 }
+                                } else {
+                                    0
+                                }
 
                             // Add Theme to list
                             foods.add(Food(name, calories))

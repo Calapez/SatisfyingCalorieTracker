@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SearchView
-        android:id="@+id/searchFoods"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:iconifiedByDefault="false">
+        android:layout_height="fill_parent">
 
-        <requestFocus />
-    </SearchView>
+        <SearchView
+            android:id="@+id/searchFoods"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false">
 
-    <ListView
-        android:id="@+id/listFoods"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@+id/searchFoods" />
+            <requestFocus />
+        </SearchView>
 
-</RelativeLayout>
+        <ListView
+            android:id="@+id/listFoods"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/searchFoods" />
+
+    </RelativeLayout>
+</layout>
